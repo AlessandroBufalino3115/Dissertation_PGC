@@ -16,7 +16,7 @@ public class DeluanryTrig : MonoBehaviour
     [SerializeField]
     List<Vector3> pointList = new List<Vector3>();
 
-    List<Edge> primEdges = new List<Edge>();
+    List<TriEdge> primEdges = new List<TriEdge>();
 
     private void Start()
     {

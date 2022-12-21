@@ -752,7 +752,7 @@ public static class AlgosUtils
 
     #region Triangulation
 
-    public static List<Edge> PrimAlgoNoDelu(List<Vector3> points) 
+    public static List<TriEdge> PrimAlgoNoDelu(List<Vector3> points) 
     {
         var triangulation = DelunayTriangulation2D(points);
 
@@ -760,9 +760,9 @@ public static class AlgosUtils
 
     }
 
-    public static List<Edge> PrimAlgo(List<Vector3> points, List<Triangle> triangulation) 
+    public static List<TriEdge> PrimAlgo(List<Vector3> points, List<Triangle> triangulation) 
     {
-        List<Edge> primsAlgo = new List<Edge>();
+        List<TriEdge> primsAlgo = new List<TriEdge>();
 
         HashSet<Vector3> visitedVertices = new HashSet<Vector3>();
 
@@ -774,7 +774,7 @@ public static class AlgosUtils
         while (visitedVertices.Count != points.Count)
         {
 
-            HashSet<Edge> edgesWithPoint = new HashSet<Edge>();
+            HashSet<TriEdge> edgesWithPoint = new HashSet<TriEdge>();
 
             foreach (var trig in triangulation)    // we get all the edges
             {
@@ -830,11 +830,11 @@ public static class AlgosUtils
                 }
             }
 
-            List<Edge> polygon = new List<Edge>();
+            List<TriEdge> polygon = new List<TriEdge>();
 
             foreach (Triangle triangle in badTriangles)
             {
-                foreach (Edge triangleEdge in triangle.edges)
+                foreach (TriEdge triangleEdge in triangle.edges)
                 {
                     bool isShared = false;
 
@@ -842,7 +842,7 @@ public static class AlgosUtils
                     {
                         if (otherTri == triangle) { continue; }
 
-                        foreach (Edge otherEdge in otherTri.edges)
+                        foreach (TriEdge otherEdge in otherTri.edges)
                         {
                             if (LineIsEqual(triangleEdge, otherEdge))
                             {
@@ -864,7 +864,7 @@ public static class AlgosUtils
                 triangulation.Remove(badTriangle);   // i think this is the issue here
             }
 
-            foreach (Edge edge in polygon)
+            foreach (TriEdge edge in polygon)
             {
                 Triangle newTriangle = new Triangle(edge.edge[0], edge.edge[1], point);
                 triangulation.Add(newTriangle);
@@ -883,7 +883,7 @@ public static class AlgosUtils
 
     }
 
-    public static bool LineIsEqual(Edge A, Edge B)
+    public static bool LineIsEqual(TriEdge A, TriEdge B)
     {
         if ((A.edge[0] == B.edge[0] && A.edge[1] == B.edge[1]) || (A.edge[0] == B.edge[1] && A.edge[1] == B.edge[0])) { return true; }
         else { return false; }
@@ -1184,7 +1184,7 @@ public class Triangle
     public Vector3 b;
     public Vector3 c;
 
-    public Edge[] edges = new Edge[3];
+    public TriEdge[] edges = new TriEdge[3];
 
     public Triangle(Vector3 a, Vector3 b, Vector3 c)
     {
@@ -1193,9 +1193,9 @@ public class Triangle
         this.c = c;
 
 
-        this.edges[0] = new Edge(a, b);
-        this.edges[1] = new Edge(b, c);
-        this.edges[2] = new Edge(c, a);
+        this.edges[0] = new TriEdge(a, b);
+        this.edges[1] = new TriEdge(b, c);
+        this.edges[2] = new TriEdge(c, a);
     }
 
 
@@ -1207,11 +1207,11 @@ public class Triangle
 
 }
 
-public class Edge
+public class TriEdge
 {
     public Vector3[] edge = new Vector3[2];
     public float length;
-    public Edge(Vector3 a, Vector3 b)
+    public TriEdge(Vector3 a, Vector3 b)
     {
         edge[0] = a;
         edge[1] = b;
